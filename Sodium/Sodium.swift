@@ -20,11 +20,13 @@ public class Sodium {
     
     public init?() {
         struct Once {
-            static var once : () = {
-                if sodium_init() == -1 {
-                    abort()
-                }
-            }()
+            static var once: dispatch_once_t = 0
         }
-    }
+        dispatch_once(&Once.once) {
+            if sodium_init() == -1 {
+                abort()
+            }
+            ()
+        }
+    }    
 }
